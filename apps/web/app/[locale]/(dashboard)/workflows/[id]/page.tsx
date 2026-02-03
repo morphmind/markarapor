@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -121,15 +121,6 @@ export default function WorkflowDetailPage() {
         return <AlertCircle className="h-4 w-4 text-gray-500" />;
     }
   };
-
-  const workflowNodes = useMemo(
-    () => (workflow.nodes as unknown as WorkflowNodeData[]) || [],
-    [workflow.nodes]
-  );
-  const workflowEdges = useMemo(
-    () => (workflow.edges as unknown as WorkflowEdgeData[]) || [],
-    [workflow.edges]
-  );
 
   const getStatusText = (status: string) => {
     switch (status) {
