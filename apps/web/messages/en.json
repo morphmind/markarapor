@@ -1,0 +1,160 @@
+{
+  "common": {
+    "appName": "MarkaRapor",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "settings": "Settings",
+    "logout": "Logout",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Full Name",
+    "loginWithGoogle": "Login with Google",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "welcome": "Welcome",
+    "welcomeBack": "Welcome Back"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {name}!",
+    "overview": "Overview",
+    "totalWorkflows": "Total Workflows",
+    "activeBrands": "Active Brands",
+    "reportsThisMonth": "Reports This Month",
+    "creditsRemaining": "Credits Remaining",
+    "recentWorkflows": "Recent Workflows",
+    "upcomingSchedules": "Upcoming Schedules",
+    "quickActions": "Quick Actions"
+  },
+  "workflows": {
+    "title": "Workflows",
+    "create": "New Workflow",
+    "edit": "Edit Workflow",
+    "run": "Run",
+    "schedule": "Schedule",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "running": "Running",
+      "completed": "Completed",
+      "failed": "Failed"
+    },
+    "triggers": {
+      "manual": "Manual",
+      "scheduled": "Scheduled",
+      "webhook": "Webhook"
+    },
+    "editor": {
+      "title": "Workflow Editor",
+      "nodes": "Nodes",
+      "canvas": "Canvas",
+      "settings": "Settings",
+      "save": "Save",
+      "test": "Test"
+    }
+  },
+  "brands": {
+    "title": "Brands",
+    "create": "New Brand",
+    "edit": "Edit Brand",
+    "name": "Brand Name",
+    "website": "Website",
+    "industry": "Industry",
+    "logo": "Logo",
+    "colors": "Brand Colors",
+    "connections": "Connections",
+    "activities": "Activities"
+  },
+  "connections": {
+    "title": "Connections",
+    "add": "Add Connection",
+    "test": "Test",
+    "refresh": "Refresh",
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "error": "Error"
+    },
+    "providers": {
+      "googleAds": "Google Ads",
+      "googleAnalytics": "Google Analytics",
+      "searchConsole": "Search Console",
+      "googleSlides": "Google Slides",
+      "googleSheets": "Google Sheets"
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "create": "New Report",
+    "view": "View Report",
+    "download": "Download",
+    "share": "Share",
+    "types": {
+      "performance": "Performance",
+      "seo": "SEO",
+      "ads": "Ads",
+      "analytics": "Analytics",
+      "combined": "Combined"
+    },
+    "sections": {
+      "summary": "Summary",
+      "metrics": "Metrics",
+      "insights": "AI Insights",
+      "recommendations": "Recommendations"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "workspace": "Workspace",
+    "team": "Team",
+    "billing": "Billing",
+    "ai": "AI Settings",
+    "notifications": "Notifications",
+    "security": "Security"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "Users",
+    "workspaces": "Workspaces",
+    "subscriptions": "Subscriptions",
+    "systemSettings": "System Settings",
+    "aiSettings": "AI API Settings"
+  },
+  "errors": {
+    "general": "An error occurred",
+    "notFound": "Page not found",
+    "unauthorized": "You don't have permission for this action",
+    "invalidCredentials": "Invalid email or password",
+    "networkError": "Network error",
+    "tryAgain": "Please try again"
+  }
+}

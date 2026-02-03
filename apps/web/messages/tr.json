@@ -1,0 +1,160 @@
+{
+  "common": {
+    "appName": "MarkaRapor",
+    "loading": "Yükleniyor...",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "create": "Oluştur",
+    "search": "Ara",
+    "filter": "Filtrele",
+    "export": "Dışa Aktar",
+    "import": "İçe Aktar",
+    "settings": "Ayarlar",
+    "logout": "Çıkış Yap",
+    "back": "Geri",
+    "next": "İleri",
+    "submit": "Gönder",
+    "confirm": "Onayla",
+    "close": "Kapat",
+    "yes": "Evet",
+    "no": "Hayır",
+    "success": "Başarılı",
+    "error": "Hata",
+    "warning": "Uyarı",
+    "info": "Bilgi"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "register": "Kayıt Ol",
+    "forgotPassword": "Şifremi Unuttum",
+    "resetPassword": "Şifre Sıfırla",
+    "email": "E-posta",
+    "password": "Şifre",
+    "confirmPassword": "Şifreyi Onayla",
+    "name": "Ad Soyad",
+    "loginWithGoogle": "Google ile Giriş Yap",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Zaten hesabınız var mı?",
+    "welcome": "Hoş Geldiniz",
+    "welcomeBack": "Tekrar Hoş Geldiniz"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Hoş geldin, {name}!",
+    "overview": "Genel Bakış",
+    "totalWorkflows": "Toplam Workflow",
+    "activeBrands": "Aktif Marka",
+    "reportsThisMonth": "Bu Ay Rapor",
+    "creditsRemaining": "Kalan Kredi",
+    "recentWorkflows": "Son Çalışan Workflow'lar",
+    "upcomingSchedules": "Yaklaşan Zamanlamalar",
+    "quickActions": "Hızlı İşlemler"
+  },
+  "workflows": {
+    "title": "Workflow'lar",
+    "create": "Yeni Workflow",
+    "edit": "Workflow Düzenle",
+    "run": "Çalıştır",
+    "schedule": "Zamanla",
+    "duplicate": "Kopyala",
+    "delete": "Sil",
+    "status": {
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "running": "Çalışıyor",
+      "completed": "Tamamlandı",
+      "failed": "Başarısız"
+    },
+    "triggers": {
+      "manual": "Manuel",
+      "scheduled": "Zamanlanmış",
+      "webhook": "Webhook"
+    },
+    "editor": {
+      "title": "Workflow Editörü",
+      "nodes": "Düğümler",
+      "canvas": "Çalışma Alanı",
+      "settings": "Ayarlar",
+      "save": "Kaydet",
+      "test": "Test Et"
+    }
+  },
+  "brands": {
+    "title": "Markalar",
+    "create": "Yeni Marka",
+    "edit": "Marka Düzenle",
+    "name": "Marka Adı",
+    "website": "Website",
+    "industry": "Sektör",
+    "logo": "Logo",
+    "colors": "Marka Renkleri",
+    "connections": "Bağlantılar",
+    "activities": "Aktiviteler"
+  },
+  "connections": {
+    "title": "Bağlantılar",
+    "add": "Bağlantı Ekle",
+    "test": "Test Et",
+    "refresh": "Yenile",
+    "status": {
+      "active": "Aktif",
+      "expired": "Süresi Dolmuş",
+      "error": "Hata"
+    },
+    "providers": {
+      "googleAds": "Google Ads",
+      "googleAnalytics": "Google Analytics",
+      "searchConsole": "Search Console",
+      "googleSlides": "Google Slides",
+      "googleSheets": "Google Sheets"
+    }
+  },
+  "reports": {
+    "title": "Raporlar",
+    "create": "Yeni Rapor",
+    "view": "Raporu Görüntüle",
+    "download": "İndir",
+    "share": "Paylaş",
+    "types": {
+      "performance": "Performans",
+      "seo": "SEO",
+      "ads": "Reklamlar",
+      "analytics": "Analytics",
+      "combined": "Kombine"
+    },
+    "sections": {
+      "summary": "Özet",
+      "metrics": "Metrikler",
+      "insights": "AI Öngörüleri",
+      "recommendations": "Öneriler"
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "profile": "Profil",
+    "workspace": "Çalışma Alanı",
+    "team": "Takım",
+    "billing": "Faturalama",
+    "ai": "AI Ayarları",
+    "notifications": "Bildirimler",
+    "security": "Güvenlik"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "Kullanıcılar",
+    "workspaces": "Çalışma Alanları",
+    "subscriptions": "Abonelikler",
+    "systemSettings": "Sistem Ayarları",
+    "aiSettings": "AI API Ayarları"
+  },
+  "errors": {
+    "general": "Bir hata oluştu",
+    "notFound": "Sayfa bulunamadı",
+    "unauthorized": "Bu işlem için yetkiniz yok",
+    "invalidCredentials": "Geçersiz e-posta veya şifre",
+    "networkError": "Bağlantı hatası",
+    "tryAgain": "Lütfen tekrar deneyin"
+  }
+}
