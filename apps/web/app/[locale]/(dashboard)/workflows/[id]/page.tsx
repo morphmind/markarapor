@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -16,6 +16,7 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
+  AlertTriangle,
   Download,
   FileText,
   Database,
@@ -23,6 +24,7 @@ import {
   Shuffle,
   FileOutput,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { trpc } from "~/lib/trpc";
@@ -32,7 +34,14 @@ export default function WorkflowDetailPage() {
   const params = useParams();
   const workflowId = params.id as string;
 
-  const { data: workflow, isLoading, refetch } = trpc.workflow.get.useQuery({ id: workflowId });
+  // Poll every 2s when there are pending/running runs
+  const hasActiveRuns = (workflow?: { runs?: { status: string }[] }) =>
+    workflow?.runs?.some((r) => r.status === "PENDING" || r.status === "RUNNING") ?? false;
+
+  const { data: workflow, isLoading, refetch } = trpc.workflow.get.useQuery(
+    { id: workflowId },
+    { refetchInterval: (query) => hasActiveRuns(query.state.data as any) ? 2000 : false }
+  );
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -85,6 +94,11 @@ export default function WorkflowDetailPage() {
   };
 
   const handleRun = () => {
+    // Check if there's an active run already
+    const hasActiveRun = workflow?.runs?.some(
+      (r) => r.status === "PENDING" || r.status === "RUNNING"
+    );
+    if (hasActiveRun) return;
     runWorkflow.mutate({ id: workflowId });
   };
 
@@ -114,9 +128,9 @@ export default function WorkflowDetailPage() {
       case "FAILED":
         return <XCircle className="h-4 w-4 text-red-500" />;
       case "RUNNING":
-        return <Clock className="h-4 w-4 text-blue-500 animate-spin" />;
+        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
       case "PENDING":
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="h-4 w-4 text-yellow-500 animate-pulse" />;
       default:
         return <AlertCircle className="h-4 w-4 text-gray-500" />;
     }
@@ -171,12 +185,56 @@ export default function WorkflowDetailPage() {
               </>
             )}
           </Button>
-          <Button onClick={handleRun} disabled={runWorkflow.isPending}>
-            <Play className="mr-2 h-4 w-4" />
-            {runWorkflow.isPending ? "Başlatılıyor..." : "Şimdi Çalıştır"}
+          <Button
+            onClick={handleRun}
+            disabled={
+              runWorkflow.isPending ||
+              hasActiveRuns(workflow)
+            }
+          >
+            {hasActiveRuns(workflow) ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Çalışıyor...
+              </>
+            ) : runWorkflow.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Başlatılıyor...
+              </>
+            ) : (
+              <>
+                <Play className="mr-2 h-4 w-4" />
+                Şimdi Çalıştır
+              </>
+            )}
           </Button>
         </div>
       </div>
+
+      {/* Connection Warning */}
+      {workflow.brand?.connections && workflow.brand.connections.length === 0 && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-900 dark:bg-amber-950/30">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                Bağlantı Gerekli
+              </p>
+              <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                Bu workflow&apos;u çalıştırmak için marka ile Google hesap bağlantısı gereklidir.
+                Lütfen önce{" "}
+                <Link
+                  href="/connections"
+                  className="underline font-medium hover:text-amber-900 dark:hover:text-amber-100"
+                >
+                  bağlantı ekleyin
+                </Link>.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Workflow Info */}
@@ -232,46 +290,72 @@ export default function WorkflowDetailPage() {
           <CardContent>
             {workflow.runs && workflow.runs.length > 0 ? (
               <div className="space-y-2">
-                {workflow.runs.map((run) => (
-                  <div
-                    key={run.id}
-                    className="flex items-center justify-between p-3 rounded-lg border"
-                  >
-                    <div className="flex items-center gap-3">
-                      {getStatusIcon(run.status)}
-                      <div>
-                        <p className="text-sm font-medium">
-                          {getStatusText(run.status)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(run.startedAt).toLocaleString("tr-TR")}
-                        </p>
+                {workflow.runs.map((run) => {
+                  const runError = (run as { error?: string | null }).error;
+                  const nodeResults = (run as { nodeResults?: Record<string, unknown> }).nodeResults;
+                  const errorCount = nodeResults
+                    ? Object.values(nodeResults).filter((r) => r && typeof r === "object" && "error" in (r as object)).length
+                    : 0;
+
+                  return (
+                    <div
+                      key={run.id}
+                      className={`p-3 rounded-lg border ${run.status === "FAILED" ? "border-red-200 bg-red-50/50 dark:border-red-900 dark:bg-red-950/20" : ""}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {getStatusIcon(run.status)}
+                          <div>
+                            <p className="text-sm font-medium">
+                              {getStatusText(run.status)}
+                              {(run.status === "RUNNING" || run.status === "PENDING") && (
+                                <span className="ml-2 text-xs text-muted-foreground">
+                                  İşleniyor...
+                                </span>
+                              )}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(run.startedAt).toLocaleString("tr-TR")}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {errorCount > 0 && run.status !== "FAILED" && (
+                            <span className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
+                              <AlertTriangle className="h-3 w-3" />
+                              {errorCount} hata
+                            </span>
+                          )}
+                          {run.creditsUsed > 0 && (
+                            <span className="text-xs text-muted-foreground">
+                              {run.creditsUsed} kredi
+                            </span>
+                          )}
+                          {run.status === "COMPLETED" && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              asChild
+                            >
+                              <a
+                                href={`/api/export/${run.id}?format=pdf`}
+                                download
+                              >
+                                <Download className="h-3 w-3 mr-1" />
+                                PDF
+                              </a>
+                            </Button>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {run.creditsUsed > 0 && (
-                        <span className="text-xs text-muted-foreground">
-                          {run.creditsUsed} kredi
-                        </span>
-                      )}
-                      {run.status === "COMPLETED" && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          asChild
-                        >
-                          <a
-                            href={`/api/export/${run.id}?format=pdf`}
-                            download
-                          >
-                            <Download className="h-3 w-3 mr-1" />
-                            PDF
-                          </a>
-                        </Button>
+                      {run.status === "FAILED" && runError && (
+                        <p className="mt-2 text-xs text-red-600 dark:text-red-400 line-clamp-2">
+                          {runError}
+                        </p>
                       )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="text-center py-8">

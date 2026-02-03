@@ -65,6 +65,15 @@ export const workflowRouter = createTRPCRouter({
           runs: {
             orderBy: { startedAt: "desc" },
             take: 10,
+            select: {
+              id: true,
+              status: true,
+              startedAt: true,
+              completedAt: true,
+              creditsUsed: true,
+              error: true,
+              nodeResults: true,
+            },
           },
         },
       });

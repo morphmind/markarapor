@@ -623,14 +623,36 @@ export async function executeWorkflow(
       }
     }
 
+    // Determine final status based on node results
+    const nodeEntries = Object.entries(context.nodeResults);
+    const dataSourceNodes = nodes.filter((n) => n.type === "data-source");
+    const failedDataSources = dataSourceNodes.filter((n) => {
+      const result = context.nodeResults[n.id];
+      return result && "error" in result;
+    });
+
+    // If ALL data source nodes failed, the run is FAILED
+    // If there are no data source nodes at all, or every single node errored, also FAILED
+    const allNodesFailed = nodeEntries.length > 0 && nodeEntries.every(([, r]) => "error" in r);
+    const allDataSourcesFailed = dataSourceNodes.length > 0 && failedDataSources.length === dataSourceNodes.length;
+    const finalStatus = allNodesFailed || allDataSourcesFailed ? "FAILED" : "COMPLETED";
+
+    const errorSummary = allNodesFailed || allDataSourcesFailed
+      ? nodeEntries
+          .filter(([, r]) => "error" in r)
+          .map(([id, r]) => `${id}: ${(r as { error: string }).error}`)
+          .join("; ")
+      : undefined;
+
     // Update run with results
     await prisma.workflowRun.update({
       where: { id: runId },
       data: {
-        status: "COMPLETED",
+        status: finalStatus,
         nodeResults: JSON.parse(JSON.stringify(context.nodeResults)),
         creditsUsed: Math.ceil(creditsUsed),
         completedAt: new Date(),
+        ...(errorSummary && { error: errorSummary }),
       },
     });
 
