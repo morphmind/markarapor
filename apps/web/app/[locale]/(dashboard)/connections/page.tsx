@@ -82,6 +82,7 @@ export default function ConnectionsPage() {
   const [selectedProvider, setSelectedProvider] = useState<ConnectionProviderKey | null>(null);
   const [connectionName, setConnectionName] = useState("");
   const [selectedBrandId, setSelectedBrandId] = useState("");
+  const [propertyId, setPropertyId] = useState("");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Handle OAuth callback messages
@@ -137,6 +138,7 @@ export default function ConnectionsPage() {
       setConnectionName("");
       setSelectedBrandId("");
       setSelectedProvider(null);
+      setPropertyId("");
       refetchConnections();
     },
   });
@@ -158,6 +160,15 @@ export default function ConnectionsPage() {
   const handleCreateConnection = async () => {
     if (!selectedProvider || !connectionName.trim() || !selectedBrandId || !workspaceId) return;
 
+    // Require propertyId for GA4 and Search Console
+    const needsPropertyId = selectedProvider === "GOOGLE_ANALYTICS" || selectedProvider === "GOOGLE_SEARCH_CONSOLE";
+    if (needsPropertyId && !propertyId.trim()) {
+      alert(selectedProvider === "GOOGLE_ANALYTICS"
+        ? "GA4 Property ID gereklidir"
+        : "Site URL gereklidir");
+      return;
+    }
+
     setIsConnecting(true);
 
     try {
@@ -170,6 +181,8 @@ export default function ConnectionsPage() {
           brandId: selectedBrandId,
           provider: selectedProvider,
           name: connectionName.trim(),
+          propertyId: propertyId.trim() || undefined,
+          propertyName: propertyId.trim() || undefined,
         }),
       });
 
@@ -345,6 +358,30 @@ export default function ConnectionsPage() {
                   onChange={(e) => setConnectionName(e.target.value)}
                 />
               </div>
+
+              {/* Property ID - Required for GA4 and Search Console */}
+              {(selectedProvider === "GOOGLE_ANALYTICS" || selectedProvider === "GOOGLE_SEARCH_CONSOLE") && (
+                <div className="space-y-2">
+                  <Label htmlFor="propertyId">
+                    {selectedProvider === "GOOGLE_ANALYTICS" ? "GA4 Property ID *" : "Site URL *"}
+                  </Label>
+                  <Input
+                    id="propertyId"
+                    placeholder={
+                      selectedProvider === "GOOGLE_ANALYTICS"
+                        ? "Örn: 123456789"
+                        : "Örn: https://example.com veya sc-domain:example.com"
+                    }
+                    value={propertyId}
+                    onChange={(e) => setPropertyId(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {selectedProvider === "GOOGLE_ANALYTICS"
+                      ? "GA4 Admin > Property Settings > Property ID"
+                      : "Search Console'da doğrulanmış site URL'i"}
+                  </p>
+                </div>
+              )}
             </div>
 
             <DialogFooter>
@@ -357,7 +394,8 @@ export default function ConnectionsPage() {
                   !selectedProvider ||
                   !connectionName.trim() ||
                   !selectedBrandId ||
-                  isConnecting
+                  isConnecting ||
+                  ((selectedProvider === "GOOGLE_ANALYTICS" || selectedProvider === "GOOGLE_SEARCH_CONSOLE") && !propertyId.trim())
                 }
               >
                 {isConnecting ? "Yönlendiriliyor..." : "Google ile Bağlan"}
